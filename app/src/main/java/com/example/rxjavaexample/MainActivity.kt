@@ -34,14 +34,13 @@ private lateinit var tvCounter: TextView
         tvCounter = findViewById(R.id.tvCounter)
 
         subscription = RxTextView.textChanges(rxSearch)  //можно было заюзать TextWatcher и подписаться на CharSequence, но я сделал через RxBinding
-            .filter{ it.isNotEmpty() }
             .debounce(700, TimeUnit.MILLISECONDS)
+            .filter{ it.isNotEmpty() }
             .map {
                   count(text, it.toString()) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                Log.d("TREAD", "${Thread.currentThread()}")
                 tvCounter.text = it.toString()
             }
 
