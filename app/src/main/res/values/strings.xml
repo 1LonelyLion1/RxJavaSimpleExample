@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RxJavaExample</string>
+    <string name="start_counter_value">0</string>
+    <string name="searchText">Search</string>
+</resources>
