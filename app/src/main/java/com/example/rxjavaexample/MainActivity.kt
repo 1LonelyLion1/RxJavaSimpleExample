@@ -1,6 +1,7 @@
 package com.example.rxjavaexample
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
 private lateinit var tvCounter: TextView
     private lateinit var subscription: Disposable
+
 
     private val text = exampleText
 
@@ -43,11 +45,14 @@ private lateinit var tvCounter: TextView
             .flatMap {target ->
                     countWords = 0
                     tt.map { source ->
+                        //SystemClock.sleep(100)
                         count(source, target.toString())
 
                     }
+
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnNext {
+
                                 countWords += it
                                 tvCounter.text = countWords.toString()
 
@@ -65,12 +70,14 @@ private lateinit var tvCounter: TextView
     }
 
     private fun count(str: String, target: String): Int {
-
-        return   (str.length - str.replace(target, "").length) / target.length
+    if (target.isEmpty()) return 0
+        return if (str.length < target.length) 0
+        else
+            (str.length - str.replace(target, "").length) / target.length
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         subscription.dispose()
 
 
